@@ -67,22 +67,18 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
                 children: [
                   Consumer<VideoProvider>(
                     builder: (context, provider, child) {
-                      final controller =
-                          provider.videoControllers[widget.post.identifier];
-                      if (controller == null ||
-                          !controller.value.isInitialized) {
+                      final controller = provider.videoControllers[widget.post.identifier];
+                      if (controller == null || !controller.value.isInitialized) {
                         return Container(
                           color: Colors.black,
                           child: const Center(
-                            child:
-                                CircularProgressIndicator(color: Colors.white),
+                            child: CircularProgressIndicator(color: Colors.white),
                           ),
                         );
                       }
 
                       return InkWell(
-                        onTap: () =>
-                            widget.onTogglePlayback(widget.post.identifier),
+                        onTap: () => widget.onTogglePlayback(widget.post.identifier),
                         child: AspectRatio(
                           aspectRatio: 0.7,
                           child: VideoPlayer(controller),
@@ -92,8 +88,7 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
                   ),
                   Consumer<VideoProvider>(
                     builder: (context, provider, child) {
-                      final isPlaying = provider.currentPlayingVideo ==
-                          widget.post.identifier;
+                      final isPlaying = provider.currentPlayingVideo == widget.post.identifier;
                       return Positioned.fill(
                         child: Center(
                           child: AnimatedOpacity(
@@ -110,8 +105,7 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
                                   isPlaying ? Icons.pause : Icons.play_arrow,
                                   color: Colors.white,
                                 ),
-                                onPressed: () => widget
-                                    .onTogglePlayback(widget.post.identifier),
+                                onPressed: () => widget.onTogglePlayback(widget.post.identifier),
                               ),
                             ),
                           ),
@@ -147,22 +141,18 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            const Icon(Icons.favorite_border,
-                                color: Colors.white, size: 20),
+                            const Icon(Icons.favorite_border, color: Colors.white, size: 20),
                             const SizedBox(width: 8),
                             Text(
                               '${widget.post.upvoteCount}',
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 12),
+                              style: const TextStyle(color: Colors.white, fontSize: 12),
                             ),
                             const SizedBox(width: 16),
-                            const Icon(Icons.comment_outlined,
-                                color: Colors.white, size: 20),
+                            const Icon(Icons.comment_outlined, color: Colors.white, size: 20),
                             const SizedBox(width: 8),
                             Text(
                               '${widget.post.commentCount}',
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 12),
+                              style: const TextStyle(color: Colors.white, fontSize: 12),
                             ),
                           ],
                         ),
@@ -173,13 +163,12 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
               ),
             ),
           ),
+
           Consumer<VideoProvider>(
             builder: (context, provider, child) {
-              final isExpanded =
-                  provider.expandedPosts.contains(widget.post.id);
+              final isExpanded = provider.expandedPosts.contains(widget.post.id);
               final replies = provider.replies[widget.post.id] ?? [];
-              final isLoading =
-                  provider.loadingReplies[widget.post.id] ?? false;
+              final isLoading = provider.loadingReplies[widget.post.id] ?? false;
 
               return Column(
                 children: [
@@ -191,15 +180,12 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
                         widget.onToggleExpansion();
 
                         if (!isExpanded && replies.isEmpty && !isLoading) {
-                          await Provider.of<VideoProvider>(context,
-                                  listen: false)
+                          await Provider.of<VideoProvider>(context, listen: false)
                               .loadReplies(widget.post.id);
                         }
                       },
                       icon: Icon(
-                        isExpanded
-                            ? Icons.keyboard_arrow_up
-                            : Icons.keyboard_arrow_down,
+                        isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                         color: Colors.white,
                       ),
                       label: Text(
@@ -213,39 +199,32 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
                       height: 200,
                       color: Colors.grey[900],
                       child: isLoading
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                                  color: Colors.white))
+                          ? const Center(child: CircularProgressIndicator(color: Colors.white))
                           : replies.isEmpty
                               ? const Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.chat_bubble_outline,
-                                          color: Colors.grey, size: 48),
+                                      Icon(Icons.chat_bubble_outline, color: Colors.grey, size: 48),
                                       SizedBox(height: 8),
                                       Text(
                                         'No replies yet',
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 16),
+                                        style: TextStyle(color: Colors.grey, fontSize: 16),
                                       ),
                                     ],
                                   ),
                                 )
                               : ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 8),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                   itemCount: replies.length,
                                   itemBuilder: (context, index) {
                                     final reply = replies[index];
                                     return ReplyVideoWidget(
                                       reply: reply,
-                                      onVideoInitialize:
-                                          widget.onVideoInitialize,
+                                      onVideoInitialize: widget.onVideoInitialize,
                                       onTogglePlayback: widget.onTogglePlayback,
-                                      onVisibilityChanged:
-                                          widget.onVisibilityChanged,
+                                      onVisibilityChanged: widget.onVisibilityChanged,
                                     );
                                   },
                                 ),
@@ -259,3 +238,4 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
     );
   }
 }
+
